@@ -23,22 +23,28 @@ Claude Code（指示者）からCodex CLI（実行者）へタスクを委譲す
 - 第1引数: エージェント名（coder / test-runner / refactor / reviewer）
 - 第2引数以降: タスクの説明
 
-### 2. サンドボックスモードの決定
-- エージェント名からsandbox_modeを判定する
-  - `coder`, `refactor` → `--sandbox workspace-write`
-  - `test-runner`, `reviewer` → `--sandbox read-only`
-- ユーザーが明示的に指定した場合はそちらを優先する
+### 2. エージェント設定の読み取り
+`codex/agents/<agent-name>.toml` をReadツールで読み取り、以下を取得する。
+- `sandbox_mode` → `--sandbox` フラグに使用
+- `developer_instructions` → プロンプト冒頭に付与
+
+ユーザーがsandbox_modeを明示的に指定した場合はそちらを優先する。
 
 ### 3. Codex実行（バックグラウンド）
 以下の形式でBashツールから `codex exec` を実行する。
 **`run_in_background: true`** を指定し、stdout/stderrはファイルにリダイレクトしてコンテキスト混入を防ぐ。
 
+プロンプトは `developer_instructions` の内容を冒頭にコピーし、タスク説明を `<task>` タグで続ける。
+
 ```
 codex exec \
-  --agent <agent-name> \
   --sandbox <sandbox_mode> \
   -o .codex/logs/codex-result.txt \
-  "<タスクの説明>" \
+  "<developer_instructionsの内容>
+
+<task>
+<タスクの説明>
+</task>" \
   > .codex/logs/codex-exec-$(date +%Y%m%d_%H%M%S).log 2>&1
 ```
 
