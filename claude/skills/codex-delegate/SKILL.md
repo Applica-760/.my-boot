@@ -29,25 +29,34 @@ Claude Code（指示者）からCodex CLI（実行者）へタスクを委譲す
   - `test-runner`, `reviewer` → `--sandbox read-only`
 - ユーザーが明示的に指定した場合はそちらを優先する
 
-### 3. Codex実行
-以下の形式でBashツールから `codex exec` を実行する:
+### 3. Codex実行（バックグラウンド）
+以下の形式でBashツールから `codex exec` を実行する。
+**`run_in_background: true`** を指定し、stdout/stderrはファイルにリダイレクトしてコンテキスト混入を防ぐ。
 
 ```
 codex exec \
   --sandbox <sandbox_mode> \
   -o /tmp/codex-result.txt \
-  "<タスクの説明>"
+  "<タスクの説明>" \
+  > /tmp/codex-exec-$(date +%Y%m%d_%H%M%S).log 2>&1
 ```
 
 注意:
 - 対象プロジェクトのディレクトリで実行すること（必要に応じて `--cd` を使用）
-- 実行時間が長い場合は `timeout` を適切に設定する（デフォルト120秒では不足する場合がある）
-- `--json` フラグでJSONL形式の出力も取得可能
+- `timeout` はタスク規模に応じて設定する（デフォルト120秒では不足する場合がある）
+- 完了通知が届くまで、他の作業を続行してよい（通知は自動で届くためポーリング不要）
 
 ### 4. 結果の確認
-- `/tmp/codex-result.txt` から最終メッセージを読み取る
-- `git diff` で実際の変更内容を確認する
-- 変更が意図通りか検証し、問題があれば修正指示を再度委譲する
+完了通知後、以下の順で最小限の情報のみ読み取る。
+
+1. **`.codex/logs/<agent-name>_<YYYYMMDD_HHmm>.md` の Summary セクション**（優先）
+   - エージェントが書く構造化ログ。原則これだけで判断する
+2. **`/tmp/codex-result.txt`**（補助）
+   - Codex CLIの `-o` 出力。Summaryだけでは不足する場合に参照する
+3. **`git diff`** で実際の変更内容を確認する
+4. 変更が意図通りか検証し、問題があれば修正指示を再度委譲する
+
+`/tmp/codex-exec-*.log`（リダイレクトした全出力）は問題発生時の調査用。正常時は読まない。
 
 ### 5. 報告
 - Codexが行った変更の要約をユーザーに報告する
