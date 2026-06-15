@@ -35,6 +35,7 @@ Claude Code（指示者）からCodex CLI（実行者）へタスクを委譲す
 
 ```
 codex exec \
+  --agent <agent-name> \
   --sandbox <sandbox_mode> \
   -o .codex/logs/codex-result.txt \
   "<タスクの説明>" \
