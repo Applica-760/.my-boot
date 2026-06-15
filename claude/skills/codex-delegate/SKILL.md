@@ -36,9 +36,9 @@ Claude Code（指示者）からCodex CLI（実行者）へタスクを委譲す
 ```
 codex exec \
   --sandbox <sandbox_mode> \
-  -o /tmp/codex-result.txt \
+  -o .codex/logs/codex-result.txt \
   "<タスクの説明>" \
-  > /tmp/codex-exec-$(date +%Y%m%d_%H%M%S).log 2>&1
+  > .codex/logs/codex-exec-$(date +%Y%m%d_%H%M%S).log 2>&1
 ```
 
 注意:
@@ -51,12 +51,12 @@ codex exec \
 
 1. **`.codex/logs/<agent-name>_<YYYYMMDD_HHmm>.md` の Summary セクション**（優先）
    - エージェントが書く構造化ログ。原則これだけで判断する
-2. **`/tmp/codex-result.txt`**（補助）
+2. **`.codex/logs/codex-result.txt`**（補助）
    - Codex CLIの `-o` 出力。Summaryだけでは不足する場合に参照する
 3. **`git diff`** で実際の変更内容を確認する
 4. 変更が意図通りか検証し、問題があれば修正指示を再度委譲する
 
-`/tmp/codex-exec-*.log`（リダイレクトした全出力）は問題発生時の調査用。正常時は読まない。
+`.codex/logs/codex-exec-*.log`（リダイレクトした全出力）は問題発生時の調査用。正常時は読まない。
 
 ### 5. 報告
 - Codexが行った変更の要約をユーザーに報告する
