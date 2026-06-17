@@ -22,7 +22,7 @@ copy_dir "$SCRIPT_DIR/codex" "$TARGET/.codex"
 cp "$SCRIPT_DIR/codex/AGENTS.md" "$TARGET/AGENTS.md"
 
 touch "$TARGET/.gitignore"
-for e in .claude/ .codex/ AGENTS.md; do
+for e in .my-boot/ .claude/ .codex/ AGENTS.md; do
   grep -qxF "$e" "$TARGET/.gitignore" || echo "$e" >> "$TARGET/.gitignore"
 done
 
