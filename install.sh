@@ -28,4 +28,9 @@ for e in .my-boot/ .claude/ .codex/ .codegraph/ AGENTS.md; do
   grep -qxF "$e" "$TARGET/.gitignore" || echo "$e" >> "$TARGET/.gitignore"
 done
 
+if command -v codegraph &>/dev/null || [ -x "$TARGET/node_modules/.bin/codegraph" ]; then
+  echo "Building CodeGraph index..."
+  codegraph init "$TARGET" || true
+fi
+
 echo "done."
