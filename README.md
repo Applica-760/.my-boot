@@ -40,6 +40,32 @@ tree-sitterベースの静的コード解析ツール [CodeGraph](https://github
 
 事前に1度だけ `npm i -g @colbymchenry/codegraph` でインストールし、対象プロジェクトで `codegraph init` を実行する。
 
+## CodeGraph View
+
+CodeGraphのシンボル依存グラフをスタンドアロンHTMLで可視化する。
+
+### セットアップ
+
+```bash
+cd path/to/.my-boot
+npm install
+```
+
+### 使い方
+
+```bash
+# 対象プロジェクトで codegraph init 済みであること
+node path/to/.my-boot/scripts/codegraph-view.mjs \
+  --project /path/to/repo \
+  --symbol UserService \
+  --depth 2 \
+  --output ./view.html
+
+# --output 省略時は {project}/.codegraph/view.html に出力
+# --mode callgraph で呼び出し関係のみに絞る
+# --depth でグラフ探索の深さを指定（デフォルト: 2）
+```
+
 ## カスタムSkill
 
 | Skill | 用途 |
