@@ -10,17 +10,18 @@ CLAUDE.md, AGENTS.mdには端的な指示
 ## 構成
 
 ```
-claude/              # Claude Code 設定
+.claude/             # Claude Code 設定
   CLAUDE.md          #   行動規約・ロール定義
   settings.json      #   権限・環境設定
   skills/            #   カスタムSkill
     task-planning/   #     計画・記録ドキュメント作成
     execution-spec/  #     実行仕様書作成（実装者への引き継ぎ用）
     issue-log/       #     issue記録ドキュメント作成
-codex/               # Codex 設定
-  AGENTS.md          #   行動規約・ロール定義
+.codex/              # Codex 設定
   config.toml        #   環境設定
-mcp.json             # CodeGraph MCP設定（→ .mcp.json として配布）
+AGENTS.md            # Codex 行動規約・ロール定義
+.mcp.json            # CodeGraph MCP設定
+.gitignore           # Agent設定のignoreルール
 install.sh           # 配布スクリプト
 ```
 
